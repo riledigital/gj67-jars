@@ -1,4 +1,4 @@
-ctjsVersion: 1.4.2
+ctjsVersion: 1.5.0
 notes: /* empty */
 libs:
   place:
@@ -34,6 +34,16 @@ types:
     extends: {}
     uid: a7ac1a92-1e08-4e9d-a54d-902a699c84c3
     lastmod: 1605323535735
+  - name: GameTimer
+    depth: 0
+    oncreate: ''
+    onstep: this.move();
+    ondraw: ''
+    ondestroy: ''
+    texture: -1
+    extends: {}
+    uid: 7793c1c1-c775-48f8-b9de-51eec45972db
+    lastmod: 1605325101599
 sounds: []
 styles: []
 rooms:
@@ -66,7 +76,7 @@ settings:
   authoring:
     author: ''
     site: ''
-    title: ''
+    title: GJ67-test-12312312
     version:
       - 0
       - 0
@@ -82,6 +92,8 @@ settings:
     windows: true
     linux: true
     mac: true
+    functionWrap: false
+    codeModifier: none
   branding:
     icon: -1
     accent: '#446adb'
