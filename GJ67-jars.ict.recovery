@@ -1,0 +1,149 @@
+ctjsVersion: 1.5.0
+notes: /* empty */
+libs:
+  place:
+    gridX: 1024
+    gridY: 1024
+  fittoscreen:
+    mode: scaleFit
+  mouse: {}
+  keyboard: {}
+  keyboard.polyfill: {}
+  sound.howler: {}
+textures:
+  - name: ui_circle
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 32
+      - 32.666666666666664
+    marginx: 0
+    marginy: 0
+    imgWidth: 64
+    imgHeight: 64
+    width: 64
+    height: 64
+    offx: 0
+    offy: 0
+    origname: i63670f7a-7d5a-4565-b27c-a8829746df29.png
+    shape: circle
+    left: 0
+    right: 64
+    top: 0
+    bottom: 64
+    uid: 63670f7a-7d5a-4565-b27c-a8829746df29
+    padding: 1
+    source: >-
+      /Users/riledigital/Downloads/kenney_scribbleplatformer/PNG/Default/ui_circle.png
+    r: 30
+    lastmod: 1605325943701
+skeletons: []
+types:
+  - name: Lid
+    depth: 0
+    oncreate: |-
+      const size = 10;
+      const color = "RED";
+    onstep: this.move();
+    ondraw: ''
+    ondestroy: ''
+    texture: 63670f7a-7d5a-4565-b27c-a8829746df29
+    extends:
+      ctype: Lids
+    uid: 65fe333b-5a06-45ef-ab91-2187829b1255
+    lastmod: 1605323530390
+  - name: Jar
+    depth: 0
+    oncreate: ''
+    onstep: this.move();
+    ondraw: ''
+    ondestroy: ''
+    texture: -1
+    extends: {}
+    uid: a7ac1a92-1e08-4e9d-a54d-902a699c84c3
+    lastmod: 1605323535735
+  - name: GameTimer
+    depth: 0
+    oncreate: ''
+    onstep: |+
+      this.move();
+
+    ondraw: ''
+    ondestroy: ''
+    texture: -1
+    extends: {}
+    uid: 7793c1c1-c775-48f8-b9de-51eec45972db
+    lastmod: 1605325689064
+sounds: []
+styles: []
+rooms:
+  - name: Room_6dd99dd9d783
+    oncreate: console.log("Created the room?");
+    onstep: ''
+    ondraw: ''
+    onleave: ''
+    width: 800
+    height: 600
+    backgrounds: []
+    copies:
+      - x: 64
+        'y': 256
+        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
+      - x: 128
+        'y': 256
+        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
+      - x: 192
+        'y': 256
+        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
+      - x: 192
+        'y': 256
+        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
+      - x: 192
+        'y': 320
+        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
+      - x: 256
+        'y': 320
+        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
+    tiles:
+      - depth: -10
+        tiles: []
+        extends: {}
+    uid: f7c0c948-cec8-4b6d-8390-6dd99dd9d783
+    thumbnail: 6dd99dd9d783
+    extends: {}
+    gridX: 64
+    gridY: 64
+actions: []
+emitterTandems: []
+scripts: []
+starting: 0
+settings:
+  authoring:
+    author: ''
+    site: ''
+    title: GJ67-test-12312312
+    version:
+      - 0
+      - 0
+      - 0
+    versionPostfix: ''
+  rendering:
+    usePixiLegacy: true
+    maxFPS: 60
+    pixelatedrender: false
+    highDensity: true
+    desktopMode: maximized
+  export:
+    windows: true
+    linux: true
+    mac: true
+    functionWrap: false
+    codeModifier: none
+  branding:
+    icon: -1
+    accent: '#446adb'
+    invertPreloaderScheme: true
+  fps: 30
+fonts: []
