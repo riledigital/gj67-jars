@@ -1,25 +1,50 @@
 ctjsVersion: 1.5.0
 notes: /* empty */
 libs:
-  place:
-    gridX: 1024
-    gridY: 1024
   fittoscreen:
     mode: scaleFit
-  mouse: {}
-  keyboard: {}
   keyboard.polyfill: {}
   sound.howler: {}
-textures: []
+textures:
+  - name: ui_circle
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 32
+      - 32.666666666666664
+    marginx: 0
+    marginy: 0
+    imgWidth: 64
+    imgHeight: 64
+    width: 64
+    height: 64
+    offx: 0
+    offy: 0
+    origname: i63670f7a-7d5a-4565-b27c-a8829746df29.png
+    shape: circle
+    left: 0
+    right: 64
+    top: 0
+    bottom: 64
+    uid: 63670f7a-7d5a-4565-b27c-a8829746df29
+    padding: 1
+    source: >-
+      /Users/riledigital/Downloads/kenney_scribbleplatformer/PNG/Default/ui_circle.png
+    r: 30
+    lastmod: 1605325943701
 skeletons: []
 types:
   - name: Lid
     depth: 0
-    oncreate: ''
+    oncreate: |-
+      const size = 10;
+      const color = "RED";
     onstep: this.move();
     ondraw: ''
     ondestroy: ''
-    texture: -1
+    texture: 63670f7a-7d5a-4565-b27c-a8829746df29
     extends:
       ctype: Lids
     uid: 65fe333b-5a06-45ef-ab91-2187829b1255
@@ -37,18 +62,20 @@ types:
   - name: GameTimer
     depth: 0
     oncreate: ''
-    onstep: this.move();
+    onstep: |+
+      this.move();
+
     ondraw: ''
     ondestroy: ''
     texture: -1
     extends: {}
     uid: 7793c1c1-c775-48f8-b9de-51eec45972db
-    lastmod: 1605325101599
+    lastmod: 1605325689064
 sounds: []
 styles: []
 rooms:
   - name: Room_6dd99dd9d783
-    oncreate: ''
+    oncreate: console.log("Created the room?");
     onstep: ''
     ondraw: ''
     onleave: ''
@@ -58,6 +85,21 @@ rooms:
     copies:
       - x: 64
         'y': 256
+        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
+      - x: 128
+        'y': 256
+        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
+      - x: 192
+        'y': 256
+        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
+      - x: 192
+        'y': 256
+        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
+      - x: 192
+        'y': 320
+        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
+      - x: 256
+        'y': 320
         uid: 65fe333b-5a06-45ef-ab91-2187829b1255
     tiles:
       - depth: -10
