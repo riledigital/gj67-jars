@@ -102,6 +102,17 @@ types:
       // TODO skip this 4 later
       const colorVariant = "RED";
       this.selected = false;
+      this.lidSize= 1;
+
+      const scaleXY = (thisCopy, size) => {
+          thisCopy.scale.x = size;
+          thisCopy.scale.y = size;
+      }
+
+      scaleXY(this, this.lidSize);
+      const scaleFactor = 1; 
+      this.scale.x = scaleFactor;
+      this.scale.y = scaleFactor;
     onstep: >-
       //  Handle mouseevents 
 
@@ -109,15 +120,25 @@ types:
       // we aren't using actions here because actions wanst made for direct
       mouse coordinate input
 
-      if (ct.mouse.down && ct.mouse.hovers(this) && !ct.room.holdingLid) {
+      if (!!!ct.room.holdingLid && ct.mouse.down && ct.mouse.hovers(this)) {
           this.x = ct.mouse.x;
           this.y = ct.mouse.y;
-          this.scale.x = scaleFactor;
-          this.scale.y = scaleFactor;
           ct.room.holdingLid = true;
           this.selected = true;
       } else {
           ct.room.holdingLid = false;
+          this.selected = false;
+      }
+
+
+      if (ct.mouse.released) {
+          var collidedJar = ct.place.meet(this, 'Jar');
+          if (!!collidedJar) {
+              console.log(`${collidedJar?.jarSize}, ${this.lidSize}`);
+              if (collidedJar.jarSize - this.lidSize <= 0.1) {
+                  console.log("sameSize matches!!!")
+              }
+          }
       }
 
 
@@ -127,35 +148,39 @@ types:
       // const scaleFactor = Math.random() * 3;
 
       this.move();
-    ondraw: ''
+    ondraw: |-
+      if (this.selected) {
+          this.alpha = 0.5;
+      } else {
+          this.alpha = 1;
+      }
     ondestroy: ''
     texture: 63670f7a-7d5a-4565-b27c-a8829746df29
     extends:
-      ctype: lid
+      ctype: lidGroup
       visible: true
     uid: 65fe333b-5a06-45ef-ab91-2187829b1255
-    lastmod: 1605410427724
+    lastmod: 1605465193771
   - name: Jar
     depth: 0
-    oncreate: let jarSize = 10;
+    oncreate: |-
+      this.jarSize = 1;
+      const scaleXY = (thisCopy, size) => {
+          thisCopy.scale.x = size;
+          thisCopy.scale.y = size;
+      }
+
+      scaleXY(this, this.jarSize);
+
+      this.tint = 44;
     onstep: this.move();
     ondraw: ''
     ondestroy: ''
     texture: 63670f7a-7d5a-4565-b27c-a8829746df29
-    extends: {}
-    uid: a7ac1a92-1e08-4e9d-a54d-902a699c84c3
-    lastmod: 1605410308567
-  - name: RoomCollider
-    depth: 0
-    oncreate: ''
-    onstep: this.move();
-    ondraw: ''
-    ondestroy: ''
-    texture: 55a2013a-de91-4ee2-be15-9ee1b3b6af54
     extends:
-      ctype: lid
-    uid: a6b78a0d-75f8-497c-b6f2-832f819c5db8
-    lastmod: 1605408379846
+      ctype: jarGroup
+    uid: a7ac1a92-1e08-4e9d-a54d-902a699c84c3
+    lastmod: 1605465188773
 sounds: []
 styles:
   - name: GameTimer
@@ -211,6 +236,8 @@ rooms:
       this.gameTimerLabel.y = 160;
 
 
+      // Make a bunch of lids and randomly place them in the map
+
       while (initLids > 0) {
           ct.types.copy('Lid', ct.random.coord()[0], ct.random.coord()[1]);
           initLids -= 1;
@@ -227,7 +254,10 @@ rooms:
     width: 800
     height: 600
     backgrounds: []
-    copies: []
+    copies:
+      - x: 128
+        'y': 256
+        uid: a7ac1a92-1e08-4e9d-a54d-902a699c84c3
     tiles:
       - depth: -10
         tiles: []
@@ -238,7 +268,7 @@ rooms:
     gridX: 64
     gridY: 64
     backgroundColor: '#EBEBEB'
-    lastmod: 1605410316399
+    lastmod: 1605463646505
 actions:
   - name: DragLid
     methods:
