@@ -1,10 +1,11 @@
 ctjsVersion: 1.5.0
 notes: /* empty */
 libs:
-  fittoscreen:
-    mode: scaleFit
   keyboard.polyfill: {}
   sound.howler: {}
+  fittoscreen:
+    mode: scaleFit
+  mouse: {}
 textures:
   - name: ui_circle
     untill: 0
@@ -43,7 +44,25 @@ types:
 
       // TODO skip this 4 later
       const colorVariant = "RED";
-    onstep: this.move();
+      this.selected = false;
+    onstep: >-
+      //  Handle mouseevents 
+
+
+      // we aren't using actions here because actions wanst made for direct
+      mouse coordinate input
+
+      if (ct.mouse.down && ct.mouse.hovers(this) && !ct.room.holdingLid) {
+          this.x = ct.mouse.x;
+          this.y = ct.mouse.y;
+          ct.room.holdingLid = true;
+          this.selected = true;
+      } else {
+          ct.room.holdingLid = false;
+      }
+
+
+      this.move();
     ondraw: ''
     ondestroy: ''
     texture: 63670f7a-7d5a-4565-b27c-a8829746df29
@@ -84,6 +103,9 @@ rooms:
 
 
       const timeRemaining = 4000
+
+      let holdingLid = false;
+
 
       // TODO setup timers
 
@@ -152,7 +174,10 @@ rooms:
     gridY: 64
     backgroundColor: '#EBEBEB'
     lastmod: 1605399076264
-actions: []
+actions:
+  - name: DragLid
+    methods:
+      - code: mouse.Left
 emitterTandems: []
 scripts: []
 starting: 0
