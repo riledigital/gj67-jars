@@ -6,6 +6,12 @@ libs:
   fittoscreen:
     mode: scaleFit
   mouse: {}
+  place:
+    undefined: ''
+    gridX: 512
+    gridY: 512
+    debugMode: false
+    debugText: 16
 textures:
   - name: ui_circle
     untill: 0
@@ -35,13 +41,63 @@ textures:
       /Users/riledigital/Downloads/kenney_scribbleplatformer/PNG/Default/ui_circle.png
     r: 30
     lastmod: 1605325943701
+  - name: ui_button
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 32
+      - 32
+    marginx: 0
+    marginy: 0
+    imgWidth: 64
+    imgHeight: 64
+    width: 64
+    height: 64
+    offx: 0
+    offy: 0
+    origname: i55a2013a-de91-4ee2-be15-9ee1b3b6af54.png
+    shape: strip
+    left: 0
+    right: 64
+    top: 0
+    bottom: 64
+    uid: 55a2013a-de91-4ee2-be15-9ee1b3b6af54
+    padding: 1
+    source: >-
+      /Users/riledigital/Downloads/kenney_scribbleplatformer/PNG/Default/ui_button.png
+    lastmod: 1605403440869
+    r: 32
+    stripPoints:
+      - x: 0
+        'y': -32
+      - x: 30
+        'y': -10
+      - x: 34
+        'y': 34
+      - x: 2
+        'y': 35
+      - x: -32
+        'y': 31
+      - x: -30
+        'y': -10
+      - x: -69.70520231213875
+        'y': -20.416184971098247
+      - x: -63.300578034682104
+        'y': -54.04624277456646
+      - x: -52.728323699421985
+        'y': -84.26589595375721
+      - x: -11.965317919075165
+        'y': -67.22543352601154
+    closedStrip: true
+    symmetryStrip: true
 skeletons: []
 types:
   - name: Lid
     depth: 0
     oncreate: |-
-      const lidSize = 10;
-
+      // this.gravity = .1;
       // TODO skip this 4 later
       const colorVariant = "RED";
       this.selected = false;
@@ -55,6 +111,9 @@ types:
       if (ct.mouse.down && ct.mouse.hovers(this) && !ct.room.holdingLid) {
           this.x = ct.mouse.x;
           this.y = ct.mouse.y;
+          const scaleFactor = Math.random() * 3;
+          this.scale.x = scaleFactor;
+          this.scale.y = scaleFactor;
           ct.room.holdingLid = true;
           this.selected = true;
       } else {
@@ -67,20 +126,31 @@ types:
     ondestroy: ''
     texture: 63670f7a-7d5a-4565-b27c-a8829746df29
     extends:
-      ctype: Lids
+      ctype: lid
+      visible: true
     uid: 65fe333b-5a06-45ef-ab91-2187829b1255
-    lastmod: 1605398862757
+    lastmod: 1605409323058
   - name: Jar
     depth: 0
-    oncreate: |
-      let jarSize = 10;
+    oncreate: let jarSize = 10;
     onstep: this.move();
     ondraw: ''
     ondestroy: ''
-    texture: -1
+    texture: 63670f7a-7d5a-4565-b27c-a8829746df29
     extends: {}
     uid: a7ac1a92-1e08-4e9d-a54d-902a699c84c3
-    lastmod: 1605398866524
+    lastmod: 1605409262344
+  - name: RoomCollider
+    depth: 0
+    oncreate: ''
+    onstep: this.move();
+    ondraw: ''
+    ondestroy: ''
+    texture: 55a2013a-de91-4ee2-be15-9ee1b3b6af54
+    extends:
+      ctype: lid
+    uid: a6b78a0d-75f8-497c-b6f2-832f819c5db8
+    lastmod: 1605408379846
 sounds: []
 styles:
   - name: GameTimer
@@ -88,11 +158,11 @@ styles:
     origname: s5ff476d6813e
     font:
       family: sans-serif
-      size: 18
+      size: 17
       weight: 400
       italic: false
       halign: center
-    lastmod: 1605395086325
+    lastmod: 1605404803717
     fill:
       type: '0'
       color: '#5E5E5E'
@@ -102,29 +172,29 @@ rooms:
       console.log("Created the lidmatching room");
 
 
-      const timeRemaining = 4000
+      const initialTime = 120000
 
       let holdingLid = false;
 
 
       // TODO setup timers
 
-      this.gameTimer = new CtTimer(timeRemaining, 'gameTimer')
+      this.gameTimer = new CtTimer(initialTime, 'gameTimer')
 
       this.gameTimer.then( () => {
-          console.log("timer ran out: " + timeRemaining);
+          console.log("Game over—timer ran out " + initialTime);
       });
 
 
       // Setup UI elements
 
       this.gameTimerText = (t) => {
-          return `Game time: ${t}`
+          return `Game time: ${Math.round(t/1000)} s`
       }
 
 
       this.gameTimerLabel = new
-      PIXI.Text(this.gameTimerText(this.gameTimer.time)),
+      PIXI.Text(this.gameTimerText(this.gameTimer.timeLeft)),
       ct.styles.get('GameTimer');
 
       this.addChild(this.gameTimerLabel);
@@ -139,7 +209,7 @@ rooms:
       // console.log(this.gameTimer);
     ondraw: |-
       // Update the text
-      this.gameTimerLabel.text = this.gameTimerText(this.gameTimer.time);
+      this.gameTimerLabel.text = this.gameTimerText(this.gameTimer.timeLeft);
     onleave: ''
     width: 800
     height: 600
