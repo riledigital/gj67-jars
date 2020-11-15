@@ -39,8 +39,10 @@ types:
   - name: Lid
     depth: 0
     oncreate: |-
-      const size = 10;
-      const color = "RED";
+      const lidSize = 10;
+
+      // TODO skip this 4 later
+      const colorVariant = "RED";
     onstep: this.move();
     ondraw: ''
     ondestroy: ''
@@ -48,36 +50,64 @@ types:
     extends:
       ctype: Lids
     uid: 65fe333b-5a06-45ef-ab91-2187829b1255
-    lastmod: 1605323530390
+    lastmod: 1605398862757
   - name: Jar
     depth: 0
-    oncreate: ''
+    oncreate: |
+      let jarSize = 10;
     onstep: this.move();
     ondraw: ''
     ondestroy: ''
     texture: -1
     extends: {}
     uid: a7ac1a92-1e08-4e9d-a54d-902a699c84c3
-    lastmod: 1605323535735
-  - name: GameTimer
-    depth: 0
-    oncreate: ''
-    onstep: |+
-      this.move();
-
-    ondraw: ''
-    ondestroy: ''
-    texture: -1
-    extends: {}
-    uid: 7793c1c1-c775-48f8-b9de-51eec45972db
-    lastmod: 1605325689064
+    lastmod: 1605398866524
 sounds: []
-styles: []
+styles:
+  - name: GameTimer
+    uid: 14b50c35-209c-4533-bd1e-5ff476d6813e
+    origname: s5ff476d6813e
+    font:
+      family: sans-serif
+      size: 18
+      weight: 400
+      italic: false
+      halign: center
+    lastmod: 1605395086325
 rooms:
-  - name: Room_6dd99dd9d783
-    oncreate: console.log("Created the room?");
+  - name: LidMatching
+    oncreate: >+
+      console.log("Created the lidmatching room");
+
+
+      const timeRemaining = 120000
+
+      // TODO setup timers
+
+      ct.timer.add(timeRemaining, 'gameTimer')
+
+
+      // Setup UI elements
+
+      this.gameTimerText = (time) => {
+          return `Game time: ${time}`
+      }
+
+
+      this.gameTimerLabel = new
+      PIXI.Text(this.gameTimerText(this.timeRemaining),
+      ct.styles.get('GameTimer'));
+
+      this.addChild(this.gameTimerLabel);
+
+      this.gameTimerLabel.x = 30;
+
+      this.gameTimerLabel.y = 30;
+
     onstep: ''
-    ondraw: ''
+    ondraw: |-
+      // Update the text
+      this.gameTimerLabel.text = this.gameTimerText(this.timeRemaining);
     onleave: ''
     width: 800
     height: 600
@@ -142,3 +172,4 @@ settings:
     invertPreloaderScheme: true
   fps: 30
 fonts: []
+styletick: .nan
