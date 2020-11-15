@@ -1,5 +1,5 @@
 ctjsVersion: 1.5.0
-notes: /* empty */
+notes: '    /* empty */'
 libs:
   keyboard.polyfill: {}
   sound.howler: {}
@@ -109,10 +109,11 @@ types:
           thisCopy.scale.y = size;
       }
 
-      scaleXY(this, this.lidSize);
-      const scaleFactor = 1; 
-      this.scale.x = scaleFactor;
-      this.scale.y = scaleFactor;
+      // scaleXY(this, this.lidSize);
+      // const scaleFactor = 1; 
+      // this.scale.x = scaleFactor;
+      // this.scale.y = scaleFactor;
+      this.zIndex = 100
     onstep: >-
       //  Handle mouseevents 
 
@@ -133,10 +134,10 @@ types:
 
       if (ct.mouse.released) {
           var collidedJar = ct.place.meet(this, 'Jar');
-          if (!!collidedJar) {
+          if (collidedJar) {
               console.log(`${collidedJar?.jarSize}, ${this.lidSize}`);
-              if (collidedJar.jarSize - this.lidSize <= 0.1) {
-                  console.log("sameSize matches!!!")
+              if ((collidedJar.jarSize - this.lidSize <= 0.1) && (collidedJar.x - this.x <= 0.1) && (collidedJar.y - this.y <= 0.1)) {
+                  console.log("size match ")
               }
           }
       }
@@ -160,7 +161,7 @@ types:
       ctype: lidGroup
       visible: true
     uid: 65fe333b-5a06-45ef-ab91-2187829b1255
-    lastmod: 1605465193771
+    lastmod: 1605484233126
   - name: Jar
     depth: 0
     oncreate: |-
@@ -225,23 +226,42 @@ rooms:
       }
 
 
+      // must make matching lids so...
+
+      let initJars = 5
+
+      while (initJars > 0) {
+          let newCopy = ct.types.copy('Jar', 50, initJars * 100);
+          initJars -= 1;
+          let scale = ct.random.range(.5, 1.5);
+          newCopy.scale = new PIXI.Point(scale, scale);
+          newCopy.zIndex = -10;
+      }
+
+
+      // Make a bunch of lids and randomly place them in the map
+
+      while (initLids > 0) {
+          let newLid = ct.types.copy('Lid', ct.random.coord()[0], ct.random.coord()[1]);
+          let scale = ct.random.range(.5, 1.5);
+          newLid.scale = new PIXI.Point(scale, scale);
+          initLids -= 1;
+          
+      }
+
+
+
+
+
       this.gameTimerLabel = new
       PIXI.Text(this.gameTimerText(this.gameTimer.timeLeft)),
       ct.styles.get('GameTimer');
 
       this.addChild(this.gameTimerLabel);
 
-      this.gameTimerLabel.x = 150;
+      this.gameTimerLabel.x = 10;
 
-      this.gameTimerLabel.y = 160;
-
-
-      // Make a bunch of lids and randomly place them in the map
-
-      while (initLids > 0) {
-          ct.types.copy('Lid', ct.random.coord()[0], ct.random.coord()[1]);
-          initLids -= 1;
-      }
+      this.gameTimerLabel.y = 10;
     onstep: >
       // console.log("game timer var: " + gameTimer.time + "• timeRemaining: " +
       this.timeRemaining);
@@ -254,10 +274,7 @@ rooms:
     width: 800
     height: 600
     backgrounds: []
-    copies:
-      - x: 128
-        'y': 256
-        uid: a7ac1a92-1e08-4e9d-a54d-902a699c84c3
+    copies: []
     tiles:
       - depth: -10
         tiles: []
@@ -265,8 +282,8 @@ rooms:
     uid: f7c0c948-cec8-4b6d-8390-6dd99dd9d783
     thumbnail: 6dd99dd9d783
     extends: {}
-    gridX: 64
-    gridY: 64
+    gridX: 0
+    gridY: 0
     backgroundColor: '#EBEBEB'
     lastmod: 1605463646505
 actions:
