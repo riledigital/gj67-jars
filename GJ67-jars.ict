@@ -12,6 +12,7 @@ libs:
     gridY: 512
     debugMode: false
     debugText: 16
+  random: {}
 textures:
   - name: ui_circle
     untill: 0
@@ -111,7 +112,6 @@ types:
       if (ct.mouse.down && ct.mouse.hovers(this) && !ct.room.holdingLid) {
           this.x = ct.mouse.x;
           this.y = ct.mouse.y;
-          const scaleFactor = Math.random() * 3;
           this.scale.x = scaleFactor;
           this.scale.y = scaleFactor;
           ct.room.holdingLid = true;
@@ -121,6 +121,11 @@ types:
       }
 
 
+
+      // use this to scale 
+
+      // const scaleFactor = Math.random() * 3;
+
       this.move();
     ondraw: ''
     ondestroy: ''
@@ -129,7 +134,7 @@ types:
       ctype: lid
       visible: true
     uid: 65fe333b-5a06-45ef-ab91-2187829b1255
-    lastmod: 1605409323058
+    lastmod: 1605410427724
   - name: Jar
     depth: 0
     oncreate: let jarSize = 10;
@@ -139,7 +144,7 @@ types:
     texture: 63670f7a-7d5a-4565-b27c-a8829746df29
     extends: {}
     uid: a7ac1a92-1e08-4e9d-a54d-902a699c84c3
-    lastmod: 1605409262344
+    lastmod: 1605410308567
   - name: RoomCollider
     depth: 0
     oncreate: ''
@@ -172,6 +177,8 @@ rooms:
       console.log("Created the lidmatching room");
 
 
+      let initLids = 20;
+
       const initialTime = 120000
 
       let holdingLid = false;
@@ -202,6 +209,12 @@ rooms:
       this.gameTimerLabel.x = 150;
 
       this.gameTimerLabel.y = 160;
+
+
+      while (initLids > 0) {
+          ct.types.copy('Lid', ct.random.coord()[0], ct.random.coord()[1]);
+          initLids -= 1;
+      }
     onstep: >
       // console.log("game timer var: " + gameTimer.time + "• timeRemaining: " +
       this.timeRemaining);
@@ -214,25 +227,7 @@ rooms:
     width: 800
     height: 600
     backgrounds: []
-    copies:
-      - x: 338
-        'y': 227
-        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
-      - x: 402
-        'y': 227
-        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
-      - x: 448
-        'y': 192
-        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
-      - x: 448
-        'y': 192
-        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
-      - x: 448
-        'y': 256
-        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
-      - x: 512
-        'y': 256
-        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
+    copies: []
     tiles:
       - depth: -10
         tiles: []
@@ -243,7 +238,7 @@ rooms:
     gridX: 64
     gridY: 64
     backgroundColor: '#EBEBEB'
-    lastmod: 1605399076264
+    lastmod: 1605410316399
 actions:
   - name: DragLid
     methods:
