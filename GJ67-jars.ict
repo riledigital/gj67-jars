@@ -42,6 +42,7 @@ textures:
       /Users/riledigital/Downloads/kenney_scribbleplatformer/PNG/Default/ui_circle.png
     r: 30
     lastmod: 1605325943701
+    ignoreTiledUse: true
   - name: ui_button
     untill: 0
     grid:
@@ -97,21 +98,22 @@ skeletons: []
 types:
   - name: Lid
     depth: 0
-    oncreate: |-
+    oncreate: |
       // this.gravity = .1;
       // TODO skip this 4 later
       const colorVariant = "RED";
+      this.draggable = true;
       this.selected = false;
       this.lidSize = ct.random.range(.5, 1.5);
       this.scale = new PIXI.Point(this.lidSize, this.lidSize);
       this.zIndex = 100
-    onstep: >-
+    onstep: >+
       //  Handle mouseevents 
 
       ct.room.holdingLid = false;
 
 
-      if (!ct.room.holdingLid && this.selected) {
+      if (!ct.room.holdingLid && this.selected && this.draggable) {
           this.x = ct.mouse.x;
           this.y = ct.mouse.y;
       } 
@@ -122,6 +124,7 @@ types:
       mouse coordinate input
 
       if (!ct.room.holdingLid && ct.mouse.down && ct.mouse.hovers(this)) {
+          
           ct.room.holdingLid = true;
           this.selected = true;
       } else {
@@ -132,22 +135,32 @@ types:
 
       // Pixels
 
-      const ERROR_MARGIN_POS = 5;
+      const ERROR_MARGIN_POS = 10;
 
       // floats
 
-      const ERROR_MARGIN_SIZE = 0.02;
+      const ERROR_MARGIN_SIZE = 0.1;
 
       var collidedJar = ct.place.meet(this, 'Jar');
 
+
       if (ct.mouse.released && collidedJar) {
-          console.log(`${collidedJar?.jarSize}, ${this.lidSize}`);
-          if ((collidedJar.jarSize - this.lidSize <= ERROR_MARGIN_SIZE) 
+          console.log(`${collidedJar?.jarSize} - ${this.lidSize}`);
+          if ((Math.abs(collidedJar.jarSize - this.lidSize) <= ERROR_MARGIN_SIZE) 
           && (Math.abs(collidedJar.x - this.x) <= ERROR_MARGIN_POS) && 
           (Math.abs(collidedJar.y - this.y) <= ERROR_MARGIN_POS)) {
-              console.log("size match ")
+              // console.log("size matched!")
+              // console.log(collidedJar);
+              // console.log(this);
+              collidedJar.matched = true;
+              ct.room.potStatus.set(collidedJar.uid, true);
+              this.draggable = false;
+              console.log(ct.room.potStatus);
+              this.tint = 0x00db0f;
           }
       }
+
+
 
 
       // use this to scale 
@@ -155,6 +168,7 @@ types:
       // const scaleFactor = Math.random() * 3;
 
       this.move();
+
     ondraw: |-
       if (this.selected) {
           this.alpha = 0.5;
@@ -167,7 +181,7 @@ types:
       ctype: lidGroup
       visible: true
     uid: 65fe333b-5a06-45ef-ab91-2187829b1255
-    lastmod: 1605485640046
+    lastmod: 1605494612593
   - name: Jar
     depth: 0
     oncreate: |-
@@ -180,7 +194,7 @@ types:
       // }
       // scaleXY(this, this.jarSize);
 
-      this.tint = 44;
+      this.tint = 0x000000;
     onstep: this.move();
     ondraw: ''
     ondestroy: ''
@@ -188,7 +202,7 @@ types:
     extends:
       ctype: jarGroup
     uid: a7ac1a92-1e08-4e9d-a54d-902a699c84c3
-    lastmod: 1605485723593
+    lastmod: 1605494495473
 sounds: []
 styles:
   - name: GameTimer
@@ -206,14 +220,17 @@ styles:
       color: '#5E5E5E'
 rooms:
   - name: LidMatching
-    oncreate: >-
+    oncreate: >
       console.log("Created the lidmatching room");
 
+      this.endRoomWin = 'EndRoomWin';
+
+      this.endRoomLose = 'EndRoomLose';
 
 
       let initLids = 60;
 
-      const initialTime = 120000
+      const initialTime = 60000;
 
       let holdingLid = false;
 
@@ -224,6 +241,7 @@ rooms:
 
       this.gameTimer.then( () => {
           console.log("Game over—timer ran out " + initialTime);
+          ct.rooms.switch(this.endRoomLose);
       });
 
 
@@ -244,7 +262,14 @@ rooms:
 
       let yMax = 550;
 
+
       // must make matching lids so...
+
+      this.unmatchedPots = [];
+
+      // uid: true/false if matched
+
+      this.potStatus = new Map();
 
       let initJars = 5
 
@@ -252,6 +277,8 @@ rooms:
           let newCopy = ct.types.copy('Jar', xMin, initJars * 100);
           initJars -= 1;
           newCopy.zIndex = -10;
+          this.unmatchedPots.push(newCopy);
+          this.potStatus.set(newCopy.uid, false);
       }
 
 
@@ -278,11 +305,17 @@ rooms:
       this.gameTimerLabel.x = 10;
 
       this.gameTimerLabel.y = 10;
-    onstep: >
+    onstep: >-
       // console.log("game timer var: " + gameTimer.time + "• timeRemaining: " +
       this.timeRemaining);
 
       // console.log(this.gameTimer);
+
+
+      if ([...ct.room.potStatus.values()].every(d => d)) {
+          console.log("all jars matched!");
+          ct.rooms.switch(this.endRoomWin);
+      }
     ondraw: |-
       // Update the text
       this.gameTimerLabel.text = this.gameTimerText(this.gameTimer.timeLeft);
@@ -298,10 +331,54 @@ rooms:
     uid: f7c0c948-cec8-4b6d-8390-6dd99dd9d783
     thumbnail: 6dd99dd9d783
     extends: {}
-    gridX: 0
-    gridY: 0
+    gridX: 64
+    gridY: 64
     backgroundColor: '#EBEBEB'
-    lastmod: 1605463646505
+    lastmod: 1605494823366
+  - name: EndRoomLose
+    oncreate: ''
+    onstep: ''
+    ondraw: ''
+    onleave: ''
+    width: 800
+    height: 600
+    backgrounds:
+      - depth: 0
+        texture: 55a2013a-de91-4ee2-be15-9ee1b3b6af54
+        extends: {}
+    copies: []
+    tiles:
+      - depth: -10
+        tiles: []
+        extends: {}
+    uid: 2c051667-f32f-45c8-acae-f6f79be22be3
+    thumbnail: f6f79be22be3
+    extends: {}
+    gridX: 64
+    gridY: 64
+    lastmod: 1605492537587
+  - name: EndRoomWin
+    oncreate: ''
+    onstep: ''
+    ondraw: ''
+    onleave: ''
+    width: 800
+    height: 600
+    backgrounds:
+      - depth: 0
+        texture: 63670f7a-7d5a-4565-b27c-a8829746df29
+        extends: {}
+    copies: []
+    tiles:
+      - depth: -10
+        tiles: []
+        extends: {}
+    uid: 52d48a2b-ad57-4871-b1e8-68506a905088
+    thumbnail: 68506a905088
+    extends: {}
+    gridX: 64
+    gridY: 64
+    lastmod: 1605494831700
 actions:
   - name: DragLid
     methods:
