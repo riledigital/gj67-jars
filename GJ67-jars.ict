@@ -102,28 +102,26 @@ types:
       // TODO skip this 4 later
       const colorVariant = "RED";
       this.selected = false;
-      this.lidSize= 1;
-
-      const scaleXY = (thisCopy, size) => {
-          thisCopy.scale.x = size;
-          thisCopy.scale.y = size;
-      }
-
-      // scaleXY(this, this.lidSize);
-      // const scaleFactor = 1; 
-      // this.scale.x = scaleFactor;
-      // this.scale.y = scaleFactor;
+      this.lidSize = ct.random.range(.5, 1.5);
+      this.scale = new PIXI.Point(this.lidSize, this.lidSize);
       this.zIndex = 100
     onstep: >-
       //  Handle mouseevents 
 
+      ct.room.holdingLid = false;
+
+
+      if (!ct.room.holdingLid && this.selected) {
+          this.x = ct.mouse.x;
+          this.y = ct.mouse.y;
+      } 
+
+      // console.log(ct.room.draggingCopies);
 
       // we aren't using actions here because actions wanst made for direct
       mouse coordinate input
 
-      if (!!!ct.room.holdingLid && ct.mouse.down && ct.mouse.hovers(this)) {
-          this.x = ct.mouse.x;
-          this.y = ct.mouse.y;
+      if (!ct.room.holdingLid && ct.mouse.down && ct.mouse.hovers(this)) {
           ct.room.holdingLid = true;
           this.selected = true;
       } else {
@@ -132,16 +130,24 @@ types:
       }
 
 
-      if (ct.mouse.released) {
-          var collidedJar = ct.place.meet(this, 'Jar');
-          if (collidedJar) {
-              console.log(`${collidedJar?.jarSize}, ${this.lidSize}`);
-              if ((collidedJar.jarSize - this.lidSize <= 0.1) && (collidedJar.x - this.x <= 0.1) && (collidedJar.y - this.y <= 0.1)) {
-                  console.log("size match ")
-              }
+      // Pixels
+
+      const ERROR_MARGIN_POS = 5;
+
+      // floats
+
+      const ERROR_MARGIN_SIZE = 0.02;
+
+      var collidedJar = ct.place.meet(this, 'Jar');
+
+      if (ct.mouse.released && collidedJar) {
+          console.log(`${collidedJar?.jarSize}, ${this.lidSize}`);
+          if ((collidedJar.jarSize - this.lidSize <= ERROR_MARGIN_SIZE) 
+          && (Math.abs(collidedJar.x - this.x) <= ERROR_MARGIN_POS) && 
+          (Math.abs(collidedJar.y - this.y) <= ERROR_MARGIN_POS)) {
+              console.log("size match ")
           }
       }
-
 
 
       // use this to scale 
@@ -161,17 +167,18 @@ types:
       ctype: lidGroup
       visible: true
     uid: 65fe333b-5a06-45ef-ab91-2187829b1255
-    lastmod: 1605484233126
+    lastmod: 1605485640046
   - name: Jar
     depth: 0
     oncreate: |-
-      this.jarSize = 1;
-      const scaleXY = (thisCopy, size) => {
-          thisCopy.scale.x = size;
-          thisCopy.scale.y = size;
-      }
-
-      scaleXY(this, this.jarSize);
+      let scale = ct.random.range(.5, 1.5);
+      this.jarSize = scale;
+      this.scale = new PIXI.Point(this.jarSize, this.jarSize);
+      // const scaleXY = (thisCopy, size) => {
+      //     thisCopy.scale.x = size;
+      //     thisCopy.scale.y = size;
+      // }
+      // scaleXY(this, this.jarSize);
 
       this.tint = 44;
     onstep: this.move();
@@ -181,7 +188,7 @@ types:
     extends:
       ctype: jarGroup
     uid: a7ac1a92-1e08-4e9d-a54d-902a699c84c3
-    lastmod: 1605465188773
+    lastmod: 1605485723593
 sounds: []
 styles:
   - name: GameTimer
@@ -203,7 +210,8 @@ rooms:
       console.log("Created the lidmatching room");
 
 
-      let initLids = 20;
+
+      let initLids = 60;
 
       const initialTime = 120000
 
@@ -226,15 +234,23 @@ rooms:
       }
 
 
+      // Boundaries for random coordinates
+
+      let xMin = 70;
+
+      let xMax = 750;
+
+      let yMin = 50;
+
+      let yMax = 550;
+
       // must make matching lids so...
 
       let initJars = 5
 
       while (initJars > 0) {
-          let newCopy = ct.types.copy('Jar', 50, initJars * 100);
+          let newCopy = ct.types.copy('Jar', xMin, initJars * 100);
           initJars -= 1;
-          let scale = ct.random.range(.5, 1.5);
-          newCopy.scale = new PIXI.Point(scale, scale);
           newCopy.zIndex = -10;
       }
 
@@ -242,15 +258,15 @@ rooms:
       // Make a bunch of lids and randomly place them in the map
 
       while (initLids > 0) {
-          let newLid = ct.types.copy('Lid', ct.random.coord()[0], ct.random.coord()[1]);
-          let scale = ct.random.range(.5, 1.5);
-          newLid.scale = new PIXI.Point(scale, scale);
-          initLids -= 1;
-          
+          let newCoords = ct.random.coord();
+          // Regenerate random coord if we are out of bounds
+          if ((newCoords[0] <= xMin + 50) || (newCoords[0] >= xMax) || (newCoords[1] <= yMin ) || (newCoords[1] >= yMax)) {
+              newCoords = ct.random.coord();
+          } else {
+              let newLid = ct.types.copy('Lid', newCoords[0], newCoords[1]);
+              initLids -= 1;
+          }
       }
-
-
-
 
 
       this.gameTimerLabel = new
