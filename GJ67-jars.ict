@@ -202,6 +202,84 @@ textures:
     source: 'C:\Users\hieua\ct.js\Projects\gj67-jars\Clip Studio Imgs\intro 2.jpg'
     tiled: true
     lastmod: 1605497030265
+  - name: restart
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 0
+      - 0
+    marginx: 0
+    marginy: 0
+    imgWidth: 800
+    imgHeight: 600
+    width: 800
+    height: 600
+    offx: 0
+    offy: 0
+    origname: i8e120c9f-33ba-4005-95a5-6a1c2f146b4d.jpg
+    shape: rect
+    left: 0
+    right: 800
+    top: 0
+    bottom: 600
+    uid: 8e120c9f-33ba-4005-95a5-6a1c2f146b4d
+    padding: 1
+    source: 'C:\Users\hieua\ct.js\Projects\gj67-jars\Clip Studio Imgs\restart.jpg'
+    tiled: true
+  - name: end_fail
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 0
+      - 0
+    marginx: 0
+    marginy: 0
+    imgWidth: 800
+    imgHeight: 600
+    width: 800
+    height: 600
+    offx: 0
+    offy: 0
+    origname: ic8a7f1a1-f64d-4b52-8d17-6fff842ca95c.jpg
+    shape: rect
+    left: 0
+    right: 800
+    top: 0
+    bottom: 600
+    uid: c8a7f1a1-f64d-4b52-8d17-6fff842ca95c
+    padding: 1
+    source: 'C:\Users\hieua\ct.js\Projects\gj67-jars\Clip Studio Imgs\end fail.jpg'
+    tiled: true
+  - name: end_success
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 0
+      - 0
+    marginx: 0
+    marginy: 0
+    imgWidth: 800
+    imgHeight: 600
+    width: 800
+    height: 600
+    offx: 0
+    offy: 0
+    origname: i68e0da23-3268-464e-8772-229fde8f5a0f.jpg
+    shape: rect
+    left: 0
+    right: 800
+    top: 0
+    bottom: 600
+    uid: 68e0da23-3268-464e-8772-229fde8f5a0f
+    padding: 1
+    source: 'C:\Users\hieua\ct.js\Projects\gj67-jars\Clip Studio Imgs\end success.jpg'
+    tiled: true
 skeletons: []
 types:
   - name: Lid
@@ -445,14 +523,17 @@ rooms:
     lastmod: 1605497322340
   - name: EndRoomLose
     oncreate: ''
-    onstep: ''
+    onstep: |-
+      if (ct.mouse.pressed) {
+          ct.rooms.switch('Restart');
+      }
     ondraw: ''
     onleave: ''
     width: 800
     height: 600
     backgrounds:
       - depth: 0
-        texture: 55a2013a-de91-4ee2-be15-9ee1b3b6af54
+        texture: c8a7f1a1-f64d-4b52-8d17-6fff842ca95c
         extends: {}
     copies: []
     tiles:
@@ -464,17 +545,20 @@ rooms:
     extends: {}
     gridX: 64
     gridY: 64
-    lastmod: 1605492537587
+    lastmod: 1605500398560
   - name: EndRoomWin
     oncreate: ''
-    onstep: ''
+    onstep: |-
+      if (ct.mouse.pressed) {
+          ct.rooms.switch('Restart');
+      }
     ondraw: ''
     onleave: ''
     width: 800
     height: 600
     backgrounds:
       - depth: 0
-        texture: 63670f7a-7d5a-4565-b27c-a8829746df29
+        texture: 68e0da23-3268-464e-8772-229fde8f5a0f
         extends: {}
     copies: []
     tiles:
@@ -486,7 +570,7 @@ rooms:
     extends: {}
     gridX: 64
     gridY: 64
-    lastmod: 1605494831700
+    lastmod: 1605500391270
   - name: IntroText
     oncreate: |-
       this.introBgs = ['intro_1', 'intro_2', 'intro_3', 'intro_4'];
@@ -521,7 +605,32 @@ rooms:
     extends: {}
     gridX: 64
     gridY: 64
-    lastmod: 1605497658215
+    lastmod: 1605500368252
+  - name: Restart
+    oncreate: ''
+    onstep: |-
+      if (ct.mouse.pressed) {
+          ct.rooms.switch('LidMatching');
+      }
+    ondraw: ''
+    onleave: ''
+    width: 800
+    height: 600
+    backgrounds:
+      - depth: 0
+        texture: 8e120c9f-33ba-4005-95a5-6a1c2f146b4d
+        extends: {}
+    copies: []
+    tiles:
+      - depth: -10
+        tiles: []
+        extends: {}
+    uid: 32893991-594d-41a0-8f0f-97d8cf6f764b
+    thumbnail: 97d8cf6f764b
+    extends: {}
+    gridX: 64
+    gridY: 64
+    lastmod: 1605500356077
 actions:
   - name: DragLid
     methods:
