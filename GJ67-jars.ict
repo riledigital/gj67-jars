@@ -1,64 +1,329 @@
 ctjsVersion: 1.5.0
-notes: /* empty */
+notes: '    /* empty */'
 libs:
-  place:
-    gridX: 1024
-    gridY: 1024
+  keyboard.polyfill: {}
+  sound.howler: {}
   fittoscreen:
     mode: scaleFit
   mouse: {}
-  keyboard: {}
-  keyboard.polyfill: {}
-  sound.howler: {}
-textures: []
+  place:
+    undefined: ''
+    gridX: 512
+    gridY: 512
+    debugMode: false
+    debugText: 16
+  random: {}
+textures:
+  - name: ui_circle
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 32
+      - 32.666666666666664
+    marginx: 0
+    marginy: 0
+    imgWidth: 64
+    imgHeight: 64
+    width: 64
+    height: 64
+    offx: 0
+    offy: 0
+    origname: i63670f7a-7d5a-4565-b27c-a8829746df29.png
+    shape: circle
+    left: 0
+    right: 64
+    top: 0
+    bottom: 64
+    uid: 63670f7a-7d5a-4565-b27c-a8829746df29
+    padding: 1
+    source: >-
+      /Users/riledigital/Downloads/kenney_scribbleplatformer/PNG/Default/ui_circle.png
+    r: 30
+    lastmod: 1605325943701
+    ignoreTiledUse: true
+  - name: ui_button
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 32
+      - 32
+    marginx: 0
+    marginy: 0
+    imgWidth: 64
+    imgHeight: 64
+    width: 64
+    height: 64
+    offx: 0
+    offy: 0
+    origname: i55a2013a-de91-4ee2-be15-9ee1b3b6af54.png
+    shape: strip
+    left: 0
+    right: 64
+    top: 0
+    bottom: 64
+    uid: 55a2013a-de91-4ee2-be15-9ee1b3b6af54
+    padding: 1
+    source: >-
+      /Users/riledigital/Downloads/kenney_scribbleplatformer/PNG/Default/ui_button.png
+    lastmod: 1605403440869
+    r: 32
+    stripPoints:
+      - x: 0
+        'y': -32
+      - x: 30
+        'y': -10
+      - x: 34
+        'y': 34
+      - x: 2
+        'y': 35
+      - x: -32
+        'y': 31
+      - x: -30
+        'y': -10
+      - x: -69.70520231213875
+        'y': -20.416184971098247
+      - x: -63.300578034682104
+        'y': -54.04624277456646
+      - x: -52.728323699421985
+        'y': -84.26589595375721
+      - x: -11.965317919075165
+        'y': -67.22543352601154
+    closedStrip: true
+    symmetryStrip: true
 skeletons: []
 types:
   - name: Lid
     depth: 0
-    oncreate: ''
-    onstep: this.move();
-    ondraw: ''
+    oncreate: |
+      // this.gravity = .1;
+      // TODO skip this 4 later
+      const colorVariant = "RED";
+      this.draggable = true;
+      this.selected = false;
+      this.lidSize = ct.random.range(.5, 1.5);
+      this.scale = new PIXI.Point(this.lidSize, this.lidSize);
+      this.zIndex = 100
+    onstep: >+
+      //  Handle mouseevents 
+
+      ct.room.holdingLid = false;
+
+
+      if (!ct.room.holdingLid && this.selected && this.draggable) {
+          this.x = ct.mouse.x;
+          this.y = ct.mouse.y;
+      } 
+
+      // console.log(ct.room.draggingCopies);
+
+      // we aren't using actions here because actions wanst made for direct
+      mouse coordinate input
+
+      if (!ct.room.holdingLid && ct.mouse.down && ct.mouse.hovers(this)) {
+          
+          ct.room.holdingLid = true;
+          this.selected = true;
+      } else {
+          ct.room.holdingLid = false;
+          this.selected = false;
+      }
+
+
+      // Pixels
+
+      const ERROR_MARGIN_POS = 10;
+
+      // floats
+
+      const ERROR_MARGIN_SIZE = 0.1;
+
+      var collidedJar = ct.place.meet(this, 'Jar');
+
+
+      if (ct.mouse.released && collidedJar) {
+          console.log(`${collidedJar?.jarSize} - ${this.lidSize}`);
+          if ((Math.abs(collidedJar.jarSize - this.lidSize) <= ERROR_MARGIN_SIZE) 
+          && (Math.abs(collidedJar.x - this.x) <= ERROR_MARGIN_POS) && 
+          (Math.abs(collidedJar.y - this.y) <= ERROR_MARGIN_POS)) {
+              // console.log("size matched!")
+              // console.log(collidedJar);
+              // console.log(this);
+              collidedJar.matched = true;
+              ct.room.potStatus.set(collidedJar.uid, true);
+              this.draggable = false;
+              console.log(ct.room.potStatus);
+              this.tint = 0x00db0f;
+          }
+      }
+
+
+
+
+      // use this to scale 
+
+      // const scaleFactor = Math.random() * 3;
+
+      this.move();
+
+    ondraw: |-
+      if (this.selected) {
+          this.alpha = 0.5;
+      } else {
+          this.alpha = 1;
+      }
     ondestroy: ''
-    texture: -1
+    texture: 63670f7a-7d5a-4565-b27c-a8829746df29
     extends:
-      ctype: Lids
+      ctype: lidGroup
+      visible: true
     uid: 65fe333b-5a06-45ef-ab91-2187829b1255
-    lastmod: 1605323530390
+    lastmod: 1605494612593
   - name: Jar
     depth: 0
-    oncreate: ''
+    oncreate: |-
+      let scale = ct.random.range(.5, 1.5);
+      this.jarSize = scale;
+      this.scale = new PIXI.Point(this.jarSize, this.jarSize);
+      // const scaleXY = (thisCopy, size) => {
+      //     thisCopy.scale.x = size;
+      //     thisCopy.scale.y = size;
+      // }
+      // scaleXY(this, this.jarSize);
+
+      this.tint = 0x000000;
     onstep: this.move();
     ondraw: ''
     ondestroy: ''
-    texture: -1
-    extends: {}
+    texture: 63670f7a-7d5a-4565-b27c-a8829746df29
+    extends:
+      ctype: jarGroup
     uid: a7ac1a92-1e08-4e9d-a54d-902a699c84c3
-    lastmod: 1605323535735
-  - name: GameTimer
-    depth: 0
-    oncreate: ''
-    onstep: this.move();
-    ondraw: ''
-    ondestroy: ''
-    texture: -1
-    extends: {}
-    uid: 7793c1c1-c775-48f8-b9de-51eec45972db
-    lastmod: 1605325101599
+    lastmod: 1605494495473
 sounds: []
-styles: []
+styles:
+  - name: GameTimer
+    uid: 14b50c35-209c-4533-bd1e-5ff476d6813e
+    origname: s5ff476d6813e
+    font:
+      family: sans-serif
+      size: 17
+      weight: 400
+      italic: false
+      halign: center
+    lastmod: 1605404803717
+    fill:
+      type: '0'
+      color: '#5E5E5E'
 rooms:
-  - name: Room_6dd99dd9d783
-    oncreate: ''
-    onstep: ''
-    ondraw: ''
+  - name: LidMatching
+    oncreate: >
+      console.log("Created the lidmatching room");
+
+      this.endRoomWin = 'EndRoomWin';
+
+      this.endRoomLose = 'EndRoomLose';
+
+
+      let initLids = 60;
+
+      const initialTime = 60000;
+
+      let holdingLid = false;
+
+
+      // TODO setup timers
+
+      this.gameTimer = new CtTimer(initialTime, 'gameTimer')
+
+      this.gameTimer.then( () => {
+          console.log("Game over—timer ran out " + initialTime);
+          ct.rooms.switch(this.endRoomLose);
+      });
+
+
+      // Setup UI elements
+
+      this.gameTimerText = (t) => {
+          return `Game time: ${Math.round(t/1000)} s`
+      }
+
+
+      // Boundaries for random coordinates
+
+      let xMin = 70;
+
+      let xMax = 750;
+
+      let yMin = 50;
+
+      let yMax = 550;
+
+
+      // must make matching lids so...
+
+      this.unmatchedPots = [];
+
+      // uid: true/false if matched
+
+      this.potStatus = new Map();
+
+      let initJars = 5
+
+      while (initJars > 0) {
+          let newCopy = ct.types.copy('Jar', xMin, initJars * 100);
+          initJars -= 1;
+          newCopy.zIndex = -10;
+          this.unmatchedPots.push(newCopy);
+          this.potStatus.set(newCopy.uid, false);
+      }
+
+
+      // Make a bunch of lids and randomly place them in the map
+
+      while (initLids > 0) {
+          let newCoords = ct.random.coord();
+          // Regenerate random coord if we are out of bounds
+          if ((newCoords[0] <= xMin + 50) || (newCoords[0] >= xMax) || (newCoords[1] <= yMin ) || (newCoords[1] >= yMax)) {
+              newCoords = ct.random.coord();
+          } else {
+              let newLid = ct.types.copy('Lid', newCoords[0], newCoords[1]);
+              initLids -= 1;
+          }
+      }
+
+
+      this.gameTimerLabel = new
+      PIXI.Text(this.gameTimerText(this.gameTimer.timeLeft)),
+      ct.styles.get('GameTimer');
+
+      this.addChild(this.gameTimerLabel);
+
+      this.gameTimerLabel.x = 10;
+
+      this.gameTimerLabel.y = 10;
+    onstep: >-
+      // console.log("game timer var: " + gameTimer.time + "• timeRemaining: " +
+      this.timeRemaining);
+
+      // console.log(this.gameTimer);
+
+
+      if ([...ct.room.potStatus.values()].every(d => d)) {
+          console.log("all jars matched!");
+          ct.rooms.switch(this.endRoomWin);
+      }
+    ondraw: |-
+      // Update the text
+      this.gameTimerLabel.text = this.gameTimerText(this.gameTimer.timeLeft);
     onleave: ''
     width: 800
     height: 600
     backgrounds: []
-    copies:
-      - x: 64
-        'y': 256
-        uid: 65fe333b-5a06-45ef-ab91-2187829b1255
+    copies: []
     tiles:
       - depth: -10
         tiles: []
@@ -68,7 +333,56 @@ rooms:
     extends: {}
     gridX: 64
     gridY: 64
-actions: []
+    backgroundColor: '#EBEBEB'
+    lastmod: 1605494823366
+  - name: EndRoomLose
+    oncreate: ''
+    onstep: ''
+    ondraw: ''
+    onleave: ''
+    width: 800
+    height: 600
+    backgrounds:
+      - depth: 0
+        texture: 55a2013a-de91-4ee2-be15-9ee1b3b6af54
+        extends: {}
+    copies: []
+    tiles:
+      - depth: -10
+        tiles: []
+        extends: {}
+    uid: 2c051667-f32f-45c8-acae-f6f79be22be3
+    thumbnail: f6f79be22be3
+    extends: {}
+    gridX: 64
+    gridY: 64
+    lastmod: 1605492537587
+  - name: EndRoomWin
+    oncreate: ''
+    onstep: ''
+    ondraw: ''
+    onleave: ''
+    width: 800
+    height: 600
+    backgrounds:
+      - depth: 0
+        texture: 63670f7a-7d5a-4565-b27c-a8829746df29
+        extends: {}
+    copies: []
+    tiles:
+      - depth: -10
+        tiles: []
+        extends: {}
+    uid: 52d48a2b-ad57-4871-b1e8-68506a905088
+    thumbnail: 68506a905088
+    extends: {}
+    gridX: 64
+    gridY: 64
+    lastmod: 1605494831700
+actions:
+  - name: DragLid
+    methods:
+      - code: mouse.Left
 emitterTandems: []
 scripts: []
 starting: 0
@@ -100,3 +414,5 @@ settings:
     invertPreloaderScheme: true
   fps: 30
 fonts: []
+styletick: .nan
+palette: []
