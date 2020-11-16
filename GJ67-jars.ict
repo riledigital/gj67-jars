@@ -94,6 +94,114 @@ textures:
         'y': -67.22543352601154
     closedStrip: true
     symmetryStrip: true
+  - name: intro_3
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 0
+      - 0
+    marginx: 0
+    marginy: 0
+    imgWidth: 800
+    imgHeight: 600
+    width: 800
+    height: 600
+    offx: 0
+    offy: 0
+    origname: i7645e6cc-3b16-4a76-a42e-842d1affd3b6.jpg
+    shape: rect
+    left: 0
+    right: 800
+    top: 0
+    bottom: 600
+    uid: 7645e6cc-3b16-4a76-a42e-842d1affd3b6
+    padding: 1
+    source: 'C:\Users\hieua\ct.js\Projects\gj67-jars\Clip Studio Imgs\intro 3.jpg'
+    tiled: true
+    lastmod: 1605497032451
+  - name: intro_1
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 0
+      - 0
+    marginx: 0
+    marginy: 0
+    imgWidth: 800
+    imgHeight: 600
+    width: 800
+    height: 600
+    offx: 0
+    offy: 0
+    origname: i87c24faf-aefd-457a-bade-dab15eac8836.jpg
+    shape: rect
+    left: 0
+    right: 800
+    top: 0
+    bottom: 600
+    uid: 87c24faf-aefd-457a-bade-dab15eac8836
+    padding: 1
+    source: 'C:\Users\hieua\ct.js\Projects\gj67-jars\Clip Studio Imgs\intro 1.jpg'
+    tiled: true
+    lastmod: 1605497027406
+  - name: intro_4
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 0
+      - 0
+    marginx: 0
+    marginy: 0
+    imgWidth: 800
+    imgHeight: 600
+    width: 800
+    height: 600
+    offx: 0
+    offy: 0
+    origname: ic8472d4d-29f2-4270-a3b9-2033d65bc2a8.jpg
+    shape: rect
+    left: 0
+    right: 800
+    top: 0
+    bottom: 600
+    uid: c8472d4d-29f2-4270-a3b9-2033d65bc2a8
+    padding: 1
+    source: 'C:\Users\hieua\ct.js\Projects\gj67-jars\Clip Studio Imgs\intro 4.jpg'
+    tiled: true
+    lastmod: 1605497035232
+  - name: intro_2
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 0
+      - 0
+    marginx: 0
+    marginy: 0
+    imgWidth: 800
+    imgHeight: 600
+    width: 800
+    height: 600
+    offx: 0
+    offy: 0
+    origname: i94598f6e-00b7-471f-82d4-7a559676386b.jpg
+    shape: rect
+    left: 0
+    right: 800
+    top: 0
+    bottom: 600
+    uid: 94598f6e-00b7-471f-82d4-7a559676386b
+    padding: 1
+    source: 'C:\Users\hieua\ct.js\Projects\gj67-jars\Clip Studio Imgs\intro 2.jpg'
+    tiled: true
+    lastmod: 1605497030265
 skeletons: []
 types:
   - name: Lid
@@ -334,7 +442,7 @@ rooms:
     gridX: 64
     gridY: 64
     backgroundColor: '#EBEBEB'
-    lastmod: 1605494823366
+    lastmod: 1605497322340
   - name: EndRoomLose
     oncreate: ''
     onstep: ''
@@ -379,6 +487,41 @@ rooms:
     gridX: 64
     gridY: 64
     lastmod: 1605494831700
+  - name: IntroText
+    oncreate: |-
+      this.introBgs = ['intro_1', 'intro_2', 'intro_3', 'intro_4'];
+      this.currentIntro = 0;
+      this.bg = ct.backgrounds.add(this.introBgs[this.currentIntro]);
+    onstep: |-
+      if (ct.mouse.pressed) {
+          if (this.currentIntro < this.introBgs.length-1) {
+              this.currentIntro += 1;
+              this.bg.kill = true;
+              this.bg = ct.backgrounds.add(this.introBgs[this.currentIntro]);
+          }
+          else {
+              ct.rooms.switch('LidMatching');
+          }
+      }
+    ondraw: ''
+    onleave: ''
+    width: 800
+    height: 600
+    backgrounds:
+      - depth: 0
+        texture: 87c24faf-aefd-457a-bade-dab15eac8836
+        extends: {}
+    copies: []
+    tiles:
+      - depth: -10
+        tiles: []
+        extends: {}
+    uid: 95ac0e0d-1c2e-4c0d-978c-204ad10affcc
+    thumbnail: 204ad10affcc
+    extends: {}
+    gridX: 64
+    gridY: 64
+    lastmod: 1605497658215
 actions:
   - name: DragLid
     methods:
@@ -416,3 +559,4 @@ settings:
 fonts: []
 styletick: .nan
 palette: []
+startroom: 95ac0e0d-1c2e-4c0d-978c-204ad10affcc
