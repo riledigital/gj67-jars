@@ -340,7 +340,7 @@ types:
 
       // units in floats
 
-      const ERROR_MARGIN_SIZE = 0.03;
+      const ERROR_MARGIN_SIZE = 0.08;
 
 
       var collidedJar = ct.place.meet(this, 'Jar');
@@ -435,17 +435,17 @@ rooms:
 
       let initLids = 60;
 
-      const initialTime = 60000;
+      this.initialTime = 120000;
 
       this.holdingLid = false;
 
 
       // TODO setup timers
 
-      this.gameTimer = new CtTimer(initialTime, 'gameTimer')
+      this.gameTimer = new CtTimer(this.initialTime, 'gameTimer');
 
       this.gameTimer.then( () => {
-          console.log("Game over—timer ran out " + initialTime);
+          console.log("Game over—timer ran out " + this.initialTime);
           ct.rooms.switch(this.endRoomLose);
       }).catch(e => {
           console.log('gameTimer removed...', e);
@@ -528,7 +528,14 @@ rooms:
     ondraw: |-
       // Update the text
       this.gameTimerLabel.text = this.gameTimerText(this.gameTimer.timeLeft);
-    onleave: ''
+    onleave: |
+      this.gameTimer = new CtTimer(this.initialTime, 'gameTimer');
+      this.gameTimer.then( () => {
+          console.log("Game over—timer ran out " + this.initialTime);
+          ct.rooms.switch(this.endRoomLose);
+      }).catch(e => {
+          console.log('gameTimer removed...', e);
+      });
     width: 800
     height: 600
     backgrounds: []
@@ -543,7 +550,7 @@ rooms:
     gridX: 64
     gridY: 64
     backgroundColor: '#EBEBEB'
-    lastmod: 1605495318832
+    lastmod: 1605501706246
   - name: EndRoomLose
     oncreate: ''
     onstep: |-
@@ -593,7 +600,7 @@ rooms:
     extends: {}
     gridX: 64
     gridY: 64
-    lastmod: 1605500391270
+    lastmod: 1605501725850
   - name: IntroText
     oncreate: |-
       this.introBgs = ['intro_1', 'intro_2', 'intro_3', 'intro_4'];
@@ -628,7 +635,7 @@ rooms:
     extends: {}
     gridX: 64
     gridY: 64
-    lastmod: 1605500368252
+    lastmod: 1605500924101
   - name: Restart
     oncreate: ''
     onstep: |-
@@ -653,7 +660,7 @@ rooms:
     extends: {}
     gridX: 64
     gridY: 64
-    lastmod: 1605500356077
+    lastmod: 1605501137979
 actions:
   - name: Press
     methods:
