@@ -213,7 +213,7 @@ types:
       // this.gravity = .1;
       // TODO skip this 4 later
       ct.room.holdingLid = false;
-
+      this.dragging = false;
       const colorVariant = "RED";
       this.draggable = true;
       this.selected = false;
@@ -229,27 +229,22 @@ types:
       mouse coordinate input
 
 
-      if (ct.mouse.released && this.dragging) {
+      if (ct.actions.Press.released && this.dragging) {
           this.dragging = false;
       }
 
 
-      if (ct.mouse.down) {
-          if (ct.mouse.hovers(this)) {
+      if (ct.actions.Press.pressed) {
+          if (ct.touch.hovers(this)) {
               this.dragging = true;
-              ct.room.draggingLid = true;
-              // Attach reference to selected lid
-              ct.room.selectedLid = this;
-
-              ct.room.selectedLid.x = ct.mouse.x;
-              ct.room.selectedLid.y = ct.mouse.y;
           }
-      } else {
-          this.dragging = false;
-          ct.room.selectedLid = null;
-          ct.room.holdingLid = false;
       }
 
+
+      if (this.dragging) {
+          this.x = ct.touch.x;
+          this.y = ct.touch.y;
+      }
 
       // only update for selected lid
 
@@ -272,7 +267,7 @@ types:
 
       var collidedJar = ct.place.meet(this, 'Jar');
 
-      if (ct.mouse.released && collidedJar) {
+      if (ct.actions.Press.released && collidedJar) {
           console.log(`${collidedJar?.jarSize} - ${this.lidSize}`);
           if ((Math.abs(collidedJar.jarSize - this.lidSize) <= ERROR_MARGIN_SIZE)
           && (Math.abs(collidedJar.x - this.x) <= ERROR_MARGIN_POS) &&
@@ -551,10 +546,7 @@ rooms:
     gridY: 64
     lastmod: 1605497658215
 actions:
-  - name: DragLid
-    methods:
-      - code: mouse.Left
-  - name: Touch
+  - name: Press
     methods:
       - code: touch.Any
 emitterTandems: []
