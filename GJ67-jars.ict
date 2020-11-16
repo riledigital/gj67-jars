@@ -664,11 +664,11 @@ starting: 0
 settings:
   authoring:
     author: ''
-    site: ''
-    title: GJ67-test-12312312
+    site: 'https://github.com/rl2999/gj67-jars'
+    title: Canopic CATastrophe
     version:
       - 0
-      - 0
+      - 1
       - 0
     versionPostfix: ''
   rendering:
