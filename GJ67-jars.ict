@@ -314,6 +314,12 @@ types:
 
       if (ct.actions.Press.pressed) {
           if (ct.touch.hovers(this)) {
+              // Get list of all lids in touch area
+              let occupiedLids = ct.place.occupied(this, 'lidGroup', true);
+              // Find lid with highest depth to select; update depth to be highest
+              let occupiedLidsDepths = occupiedLids.map(lid => lid.depth);
+              let highestDepthIndex = arr.reduce((iMax, x, i, a) => x > a[iMax] ? i : iMax, 0);
+
               this.dragging = true;
           }
       }
@@ -382,7 +388,7 @@ types:
       ctype: lidGroup
       visible: true
     uid: 65fe333b-5a06-45ef-ab91-2187829b1255
-    lastmod: 1605498604449
+    lastmod: 1605818447913
   - name: Jar
     depth: 0
     oncreate: |-
@@ -403,7 +409,7 @@ types:
     extends:
       ctype: jarGroup
     uid: a7ac1a92-1e08-4e9d-a54d-902a699c84c3
-    lastmod: 1605494495473
+    lastmod: 1605818453263
 sounds: []
 styles:
   - name: GameTimer
@@ -485,6 +491,10 @@ rooms:
 
       // Make a bunch of lids and randomly place them in the map
 
+      let initDepth = 1;
+
+      let highestDepth = 0;
+
       while (initLids > 0) {
           let newCoords = ct.random.coord();
           // Regenerate random coord if we are out of bounds
@@ -492,9 +502,13 @@ rooms:
               newCoords = ct.random.coord();
           } else {
               let newLid = ct.types.copy('Lid', newCoords[0], newCoords[1]);
+              newLid.depth = initDepth;
+              initDepth += 1;
               initLids -= 1;
           }
       }
+
+      highestDepth = initDepth;
 
 
       // Setup UI elements
