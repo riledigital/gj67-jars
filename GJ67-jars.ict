@@ -573,11 +573,11 @@ rooms:
     gridX: 64
     gridY: 64
     backgroundColor: '#EBEBEB'
-    lastmod: 1606253803005
+    lastmod: 1606253948453
   - name: EndRoomLose
     oncreate: ''
     onstep: |-
-      if (ct.mouse.pressed) {
+      if (ct.actions.Press.pressed) {
           ct.rooms.switch('Restart');
       }
     ondraw: ''
@@ -598,11 +598,11 @@ rooms:
     extends: {}
     gridX: 64
     gridY: 64
-    lastmod: 1605500398560
+    lastmod: 1606254039755
   - name: EndRoomWin
     oncreate: ''
     onstep: |-
-      if (ct.mouse.pressed) {
+      if (ct.actions.Press.pressed) {
           ct.rooms.switch('Restart');
       }
     ondraw: ''
@@ -623,14 +623,14 @@ rooms:
     extends: {}
     gridX: 64
     gridY: 64
-    lastmod: 1605501725850
+    lastmod: 1606254048632
   - name: IntroText
     oncreate: |-
       this.introBgs = ['intro_1', 'intro_2', 'intro_3', 'intro_4'];
       this.currentIntro = 0;
       this.bg = ct.backgrounds.add(this.introBgs[this.currentIntro]);
     onstep: |-
-      if (ct.mouse.pressed) {
+      if (ct.actions.Press.pressed) {
           if (this.currentIntro < this.introBgs.length-1) {
               this.currentIntro += 1;
               this.bg.kill = true;
@@ -658,11 +658,11 @@ rooms:
     extends: {}
     gridX: 64
     gridY: 64
-    lastmod: 1606251274552
+    lastmod: 1606254031013
   - name: Restart
     oncreate: ''
     onstep: |-
-      if (ct.mouse.pressed) {
+      if (ct.actions.Press.pressed) {
           ct.rooms.switch('LidMatching');
       }
     ondraw: ''
@@ -683,7 +683,7 @@ rooms:
     extends: {}
     gridX: 64
     gridY: 64
-    lastmod: 1605501137979
+    lastmod: 1606253957749
 actions:
   - name: Press
     methods:
