@@ -15,6 +15,10 @@ Entry for Mini Jam 67.
 
 [Itch.io link](https://riledigital.itch.io/canopic-catastrophe)
 
+### About
+
+This game was made in <72 for [Mini Jam 67 #minijam on Itch.io.](https://itch.io/jam/mini-jam-67-void)
+
 ### Deploy
 
 Build game in ct.js to Web, then run `surge .` on the output directory.
